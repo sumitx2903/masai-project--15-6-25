@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Performance Dashboard</title>
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <style>
     * {
@@ -18,6 +20,7 @@
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
       font-family: 'IBM Plex Sans', sans-serif;
       background-color: #f9fafb;
@@ -28,7 +31,30 @@
       margin: auto;
     }
 
-    h1, h2, h3 {
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    nav {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    nav a {
+      text-decoration: none;
+      background: #0077cc;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    h1,
+    h2,
+    h3 {
       font-weight: 600;
       margin-bottom: 12px;
     }
@@ -48,7 +74,9 @@
       background: white;
       padding: 15px;
       border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      opacity: 0;
+      transform: translateY(20px);
     }
 
     img {
@@ -90,26 +118,62 @@
       font-weight: 500;
     }
 
+    .filter {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .filter select {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
     @media (max-width: 600px) {
       .team {
         text-align: center;
       }
+
+      nav {
+        flex-direction: column;
+        gap: 10px;
+      }
     }
   </style>
 </head>
+
 <body>
 
-  <h1 id="title">Student Performance Dashboard</h1>
+  <header>
+    <h1 id="title">📊 Student Performance Dashboard</h1>
+    <nav>
+      <a href="#visuals">Visuals</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#insights">Insights</a>
+    </nav>
+  </header>
+
+  <!-- Chart Filter -->
+  <div class="filter">
+    <label for="scoreFilter">Filter Charts:</label>
+    <select id="scoreFilter" onchange="filterCharts()">
+      <option value="all">Show All</option>
+      <option value="math">Math</option>
+      <option value="reading">Reading</option>
+      <option value="writing">Writing</option>
+      <option value="total">Total</option>
+    </select>
+  </div>
 
   <!-- Key Visuals -->
-  <div class="section">
+  <div class="section" id="visuals">
     <h2 class="icon-title"><i class="fa-solid fa-chart-bar"></i> Key Visuals</h2>
-    <div class="grid-3">
-      <div class="image-box">
-        <h3>Total Score Distribution</h3>
-        <img src="static/total_score_distribution.png" alt="Total Score Distribution">
+    <div class="grid-3" id="charts">
+      <div class="image-box total">
+        <h3>Male Vs Female</h3>
+        <img src="static/male_female_comparison.png" alt="Writing Score Histogram">
       </div>
-      <div class="image-box">
+      <div class="image-box gender">
         <h3>Average Scores by Gender</h3>
         <img src="static/avg_scores_by_gender.png" alt="Average Scores by Gender">
       </div>
@@ -117,43 +181,54 @@
         <h3>Correlation Heatmap</h3>
         <img src="static/correlation_heatmap.png" alt="Correlation Heatmap">
       </div>
-    </div>
+      <div class="image-box math">
+        <h3>Math Score Distribution</h3>
+        <img src="static/math_score_histogram.png" alt="Math Score Histogram">
+      </div>
+      <div class="image-box reading">
+        <h3>Reading Score Distribution</h3>
+        <img src="static/reading_score_histogram.png" alt="Reading Score Histogram">
+      </div>
+      <div class="image-box writing">
+        <h3>Writing Score Distribution</h3>
+        <img src="static/writing_score_histogram.png" alt="Writing Score Histogram">
+      </div>
   </div>
 
   <!-- Timeline Steps -->
-  <div class="section">
+  <div class="section" id="timeline">
     <h2 class="icon-title"><i class="fa-solid fa-timeline"></i> Analysis Timeline</h2>
     <div class="timeline">
       <div class="timeline-step">
         <strong>Step 1: Data Collection</strong>
-        <p>We loaded the <code>StudentsPerformance.csv</code> dataset, which includes details like gender, race, parental education, lunch type, and scores for math, reading, and writing.</p>
+        <p>We loaded the <code>StudentsPerformance.csv</code> dataset, containing gender, race, parental education, lunch type, and subject scores.</p>
       </div>
       <div class="timeline-step">
-        <strong>Step 2: Creating a Total Score Column</strong>
-        <p>We added a new column <code>total_score</code> by summing the three subject scores. This helped us understand the overall performance of each student.</p>
+        <strong>Step 2: Total Score Column</strong>
+        <p>A <code>total_score</code> column was added by summing math, reading, and writing scores to measure overall performance.</p>
       </div>
       <div class="timeline-step">
-        <strong>Step 3: Plotting Total Score Distribution</strong>
-        <p>We used a histogram to visualize how total scores are distributed among students. It showed us if the scores were clustered or spread out.</p>
+        <strong>Step 3: Histogram Analysis</strong>
+        <p>Histograms were created for each subject and total score to understand score distributions and identify trends.</p>
       </div>
       <div class="timeline-step">
-        <strong>Step 4: Comparing Genders</strong>
-        <p>We calculated and compared average scores by gender for each subject to see performance differences between male and female students.</p>
+        <strong>Step 4: Gender Comparison</strong>
+        <p>We visualized average scores across genders, helping to identify subject strengths by gender.</p>
       </div>
       <div class="timeline-step">
         <strong>Step 5: Correlation Analysis</strong>
-        <p>A correlation heatmap helped us identify relationships between numerical fields—showing which scores tend to increase together.</p>
+        <p>A heatmap was generated to understand how academic and personal attributes correlate with performance.</p>
       </div>
     </div>
   </div>
 
   <!-- Insights -->
-  <div class="section">
+  <div class="section" id="insights">
     <h2 class="icon-title"><i class="fa-solid fa-magnifying-glass-chart"></i> Key Insights</h2>
     <ul>
-      <li>Math scores have the highest impact on a student's total score.</li>
-      <li>Girls perform better in reading and writing compared to boys.</li>
-      <li>Parental education level and gender show moderate effects on student performance.</li>
+      <li>📘 Math scores are the strongest driver of overall performance.</li>
+      <li>👩 Girls outperform boys in reading and writing.</li>
+      <li>🎓 Parental education level moderately influences performance.</li>
     </ul>
   </div>
 
@@ -164,13 +239,20 @@
 
   <!-- GSAP Animations -->
   <script>
+    gsap.registerPlugin(ScrollTrigger);
+
     gsap.to("#title", { duration: 1, opacity: 1, y: 0, ease: "power2.out", delay: 0.2 });
 
-    gsap.from(".image-box", {
-      opacity: 0,
-      y: 30,
-      stagger: 0.2,
+    gsap.to(".image-box", {
+      scrollTrigger: {
+        trigger: "#visuals",
+        start: "top 80%",
+        toggleActions: "play none none none"
+      },
+      opacity: 1,
+      y: 0,
       duration: 1,
+      stagger: 0.2,
       ease: "power2.out"
     });
 
@@ -186,6 +268,19 @@
       stagger: 0.3,
       ease: "power2.out"
     });
+
+    function filterCharts() {
+      const value = document.getElementById("scoreFilter").value;
+      const boxes = document.querySelectorAll(".image-box");
+
+      boxes.forEach(box => {
+        if (value === "all" || box.classList.contains(value)) {
+          box.style.display = "block";
+        } else {
+          box.style.display = "none";
+        }
+      });
+    }
   </script>
 
 </body>
