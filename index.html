@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Performance Dashboard</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background-color: #f9fafb;
+      color: #1e1e1e;
+      line-height: 1.6;
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    h1, h2, h3 {
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .section {
+      margin-bottom: 60px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+    }
+
+    .image-box {
+      border: 1px solid #e0e0e0;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    img {
+      width: 100%;
+      border-radius: 4px;
+      display: block;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    .icon-title {
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .icon-title i {
+      margin-right: 10px;
+      color: #0077cc;
+    }
+
+    .timeline {
+      border-left: 4px solid #0077cc;
+      padding-left: 20px;
+    }
+
+    .timeline-step {
+      margin-bottom: 30px;
+      opacity: 0;
+      transform: translateX(20px);
+    }
+
+    .team {
+      text-align: right;
+      margin-top: 60px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 600px) {
+      .team {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 id="title">Student Performance Dashboard</h1>
+
+  <!-- Key Visuals -->
+  <div class="section">
+    <h2 class="icon-title"><i class="fa-solid fa-chart-bar"></i> Key Visuals</h2>
+    <div class="grid-3">
+      <div class="image-box">
+        <h3>Total Score Distribution</h3>
+        <img src="static/total_score_distribution.png" alt="Total Score Distribution">
+      </div>
+      <div class="image-box">
+        <h3>Average Scores by Gender</h3>
+        <img src="static/avg_scores_by_gender.png" alt="Average Scores by Gender">
+      </div>
+      <div class="image-box">
+        <h3>Correlation Heatmap</h3>
+        <img src="static/correlation_heatmap.png" alt="Correlation Heatmap">
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline Steps -->
+  <div class="section">
+    <h2 class="icon-title"><i class="fa-solid fa-timeline"></i> Analysis Timeline</h2>
+    <div class="timeline">
+      <div class="timeline-step">
+        <strong>Step 1: Data Collection</strong>
+        <p>We loaded the <code>StudentsPerformance.csv</code> dataset, which includes details like gender, race, parental education, lunch type, and scores for math, reading, and writing.</p>
+      </div>
+      <div class="timeline-step">
+        <strong>Step 2: Creating a Total Score Column</strong>
+        <p>We added a new column <code>total_score</code> by summing the three subject scores. This helped us understand the overall performance of each student.</p>
+      </div>
+      <div class="timeline-step">
+        <strong>Step 3: Plotting Total Score Distribution</strong>
+        <p>We used a histogram to visualize how total scores are distributed among students. It showed us if the scores were clustered or spread out.</p>
+      </div>
+      <div class="timeline-step">
+        <strong>Step 4: Comparing Genders</strong>
+        <p>We calculated and compared average scores by gender for each subject to see performance differences between male and female students.</p>
+      </div>
+      <div class="timeline-step">
+        <strong>Step 5: Correlation Analysis</strong>
+        <p>A correlation heatmap helped us identify relationships between numerical fields—showing which scores tend to increase together.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insights -->
+  <div class="section">
+    <h2 class="icon-title"><i class="fa-solid fa-magnifying-glass-chart"></i> Key Insights</h2>
+    <ul>
+      <li>Math scores have the highest impact on a student's total score.</li>
+      <li>Girls perform better in reading and writing compared to boys.</li>
+      <li>Parental education level and gender show moderate effects on student performance.</li>
+    </ul>
+  </div>
+
+  <!-- Team -->
+  <div class="team">
+    <p>— Team: Sumit & Syed</p>
+  </div>
+
+  <!-- GSAP Animations -->
+  <script>
+    gsap.to("#title", { duration: 1, opacity: 1, y: 0, ease: "power2.out", delay: 0.2 });
+
+    gsap.from(".image-box", {
+      opacity: 0,
+      y: 30,
+      stagger: 0.2,
+      duration: 1,
+      ease: "power2.out"
+    });
+
+    gsap.to(".timeline-step", {
+      scrollTrigger: {
+        trigger: ".timeline",
+        start: "top 80%",
+        toggleActions: "play none none none"
+      },
+      opacity: 1,
+      x: 0,
+      duration: 1,
+      stagger: 0.3,
+      ease: "power2.out"
+    });
+  </script>
+
+</body>
+</html>
