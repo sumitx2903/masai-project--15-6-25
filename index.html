@@ -101,9 +101,14 @@
       color: #0077cc;
     }
 
+    #timeline {
+      padding-top: 40px;
+    }
+
     .timeline {
       border-left: 4px solid #0077cc;
       padding-left: 20px;
+
     }
 
     .timeline-step {
@@ -193,95 +198,105 @@
         <h3>Writing Score Distribution</h3>
         <img src="static/writing_score_histogram.png" alt="Writing Score Histogram">
       </div>
-  </div>
-
-  <!-- Timeline Steps -->
-  <div class="section" id="timeline">
-    <h2 class="icon-title"><i class="fa-solid fa-timeline"></i> Analysis Timeline</h2>
-    <div class="timeline">
-      <div class="timeline-step">
-        <strong>Step 1: Data Collection</strong>
-        <p>We loaded the <code>StudentsPerformance.csv</code> dataset, containing gender, race, parental education, lunch type, and subject scores.</p>
-      </div>
-      <div class="timeline-step">
-        <strong>Step 2: Total Score Column</strong>
-        <p>A <code>total_score</code> column was added by summing math, reading, and writing scores to measure overall performance.</p>
-      </div>
-      <div class="timeline-step">
-        <strong>Step 3: Histogram Analysis</strong>
-        <p>Histograms were created for each subject and total score to understand score distributions and identify trends.</p>
-      </div>
-      <div class="timeline-step">
-        <strong>Step 4: Gender Comparison</strong>
-        <p>We visualized average scores across genders, helping to identify subject strengths by gender.</p>
-      </div>
-      <div class="timeline-step">
-        <strong>Step 5: Correlation Analysis</strong>
-        <p>A heatmap was generated to understand how academic and personal attributes correlate with performance.</p>
+      <div class="image-box writing">
+        <h3>Effect of test preparation course</h3>
+        <img src="static/effect_of_test_prep_course.png" alt="Writing Score Histogram">
       </div>
     </div>
-  </div>
 
-  <!-- Insights -->
-  <div class="section" id="insights">
-    <h2 class="icon-title"><i class="fa-solid fa-magnifying-glass-chart"></i> Key Insights</h2>
-    <ul>
-      <li>📘 Math scores are the strongest driver of overall performance.</li>
-      <li>👩 Girls outperform boys in reading and writing.</li>
-      <li>🎓 Parental education level moderately influences performance.</li>
-    </ul>
-  </div>
+    <!-- <div style="height:40px;"></div> -->
 
-  <!-- Team -->
-  <div class="team">
-    <p>— Team: Sumit & Syed</p>
-  </div>
+    <!-- Timeline Steps -->
+    <div class="section" id="timeline">
+      <h2 class="icon-title"><i class="fa-solid fa-timeline"></i> Analysis Timeline</h2>
+      <div class="timeline">
+        <div class="timeline-step">
+          <strong>Step 1: Data Collection</strong>
+          <p>We loaded the <code>StudentsPerformance.csv</code> dataset, containing gender, race, parental education,
+            lunch type, and subject scores.</p>
+        </div>
+        <div class="timeline-step">
+          <strong>Step 2: Total Score Column</strong>
+          <p>A <code>total_score</code> column was added by summing math, reading, and writing scores to measure overall
+            performance.</p>
+        </div>
+        <div class="timeline-step">
+          <strong>Step 3: Histogram Analysis</strong>
+          <p>Histograms were created for each subject and total score to understand score distributions and identify
+            trends.</p>
+        </div>
+        <div class="timeline-step">
+          <strong>Step 4: Gender Comparison</strong>
+          <p>We visualized average scores across genders, helping to identify subject strengths by gender.</p>
+        </div>
+        <div class="timeline-step">
+          <strong>Step 5: Correlation Analysis</strong>
+          <p>A heatmap was generated to understand how academic and personal attributes correlate with performance.</p>
+        </div>
+      </div>
+    </div>
 
-  <!-- GSAP Animations -->
-  <script>
-    gsap.registerPlugin(ScrollTrigger);
+    <!-- Insights -->
+    <div class="section" id="insights">
+      <h2 class="icon-title"><i class="fa-solid fa-magnifying-glass-chart"></i> Key Insights</h2>
+      <ul>
+        <li>📘 Math scores are the strongest driver of overall performance.</li>
+        <li>👩 Girls outperform boys in reading and writing.</li>
+        <li>🎓 Parental education level moderately influences performance.</li>
+      </ul>
+    </div>
 
-    gsap.to("#title", { duration: 1, opacity: 1, y: 0, ease: "power2.out", delay: 0.2 });
+    <!-- Team -->
+    <div class="team">
+      <p>— Team: Sumit & Syed</p>
+    </div>
 
-    gsap.to(".image-box", {
-      scrollTrigger: {
-        trigger: "#visuals",
-        start: "top 80%",
-        toggleActions: "play none none none"
-      },
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      stagger: 0.2,
-      ease: "power2.out"
-    });
+    <!-- GSAP Animations -->
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
 
-    gsap.to(".timeline-step", {
-      scrollTrigger: {
-        trigger: ".timeline",
-        start: "top 80%",
-        toggleActions: "play none none none"
-      },
-      opacity: 1,
-      x: 0,
-      duration: 1,
-      stagger: 0.3,
-      ease: "power2.out"
-    });
+      gsap.to("#title", { duration: 1, opacity: 1, y: 0, ease: "power2.out", delay: 0.2 });
 
-    function filterCharts() {
-      const value = document.getElementById("scoreFilter").value;
-      const boxes = document.querySelectorAll(".image-box");
-
-      boxes.forEach(box => {
-        if (value === "all" || box.classList.contains(value)) {
-          box.style.display = "block";
-        } else {
-          box.style.display = "none";
-        }
+      gsap.to(".image-box", {
+        scrollTrigger: {
+          trigger: "#visuals",
+          start: "top 80%",
+          toggleActions: "play none none none"
+        },
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power2.out"
       });
-    }
-  </script>
+
+      gsap.to(".timeline-step", {
+        scrollTrigger: {
+          trigger: ".timeline",
+          start: "top 80%",
+          toggleActions: "play none none none"
+        },
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        stagger: 0.3,
+        ease: "power2.out"
+      });
+
+      function filterCharts() {
+        const value = document.getElementById("scoreFilter").value;
+        const boxes = document.querySelectorAll(".image-box");
+
+        boxes.forEach(box => {
+          if (value === "all" || box.classList.contains(value)) {
+            box.style.display = "block";
+          } else {
+            box.style.display = "none";
+          }
+        });
+      }
+    </script>
 
 </body>
+
 </html>

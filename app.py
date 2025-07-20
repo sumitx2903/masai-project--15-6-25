@@ -8,22 +8,9 @@ import os
 os.makedirs("static", exist_ok=True)
 
 # Load core dataset
-df_scores = pd.read_csv("StudentsPerformance.csv")
-df_scores['total_score'] = df_scores[['math score','reading score','writing score']].sum(axis=1)
-
-# Optional: Load alcohol dataset if available
-try:
-    df_alc = pd.read_csv("student-mat.csv", sep=';')
-    df_alc = df_alc[['studytime','G1','G2','G3']]
-    df_alc.rename(columns={'G3':'final_grade'}, inplace=True)
-    # Combine a sample (first 1000) with main
-    df = df_scores.head(len(df_alc)).copy()
-    df['studytime'] = df_alc['studytime']
-    df['final_grade'] = df_alc['final_grade']
-except FileNotFoundError:
-    df = df_scores.copy()
-    df['studytime'] = np.nan
-    print("student-mat.csv not found; skipping alcohol data")
+df = pd.read_csv("StudentsPerformance.csv")
+df['total_score'] = df[['math score','reading score','writing score']].sum(axis=1)
+df['studytime'] = np.nan  # Optional: add studytime column as NaN for compatibility
 
 # Histograms: math, reading, writing, total
 scores = ['math score','reading score','writing score','total_score']
@@ -37,14 +24,8 @@ fig = px.bar(avg_gender,x='gender',y=['math score','reading score','writing scor
              title="Average Scores by Gender")
 fig.write_image("static/avg_scores_by_gender.png")
 
-# Line chart: study time vs average subject scores
-if 'studytime' in df.columns and df['studytime'].notna().all():
-    study_avg = df.groupby('studytime')[['math score','reading score','writing score']].mean().reset_index()
-    fig = px.line(study_avg, x='studytime', y=['math score','reading score','writing score'],
-                  markers=True, title="Grades vs Study Time")
-    fig.write_image("static/grades_vs_studytime.png")
-else:
-    print("Skipping Study Time chart—no studytime column")
+# Skip study time chart (no studytime data)
+print("Skipping Study Time chart—no studytime column")
 
 # Correlation heatmap
 plt.figure(figsize=(8,6))
@@ -61,3 +42,21 @@ combined = pd.concat([m_df.mean().rename('Male'), f_df.mean().rename('Female')],
 fig = px.bar(combined, x='index', y=['Male','Female'], barmode='group',
              title="Male vs Female Mean Scores")
 fig.write_image("static/male_female_comparison.png")
+
+
+# Effect of test preparation course on scores with different color bars
+prep_course_avg = df.groupby('test preparation course')[['math score','reading score','writing score','total_score']].mean().reset_index()
+fig = px.bar(
+    prep_course_avg,
+    x='test preparation course',
+    y=['math score','reading score','writing score','total_score'],
+    barmode='group',
+    title="Effect of Test Preparation Course on Scores",
+    color_discrete_sequence=px.colors.qualitative.Set2  # Use a distinct color palette
+)
+# Use fig.write_image only if compatible Plotly and Kaleido versions are installed
+try:
+    fig.write_image("static/effect_of_test_prep_course.png")
+except Exception as e:
+    print("Image export failed:", e)
+    print("Please upgrade Plotly to >=6.1.1 and/or downgrade Kaleido to 0.2.1 for static image export.")
